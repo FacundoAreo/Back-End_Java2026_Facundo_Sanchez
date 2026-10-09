@@ -1,0 +1,16 @@
+package com.java-preentrega.article.model;
+
+public enum ProductType {
+    ELECTRONIC("productos electrónicos"),
+    FOOD("productos alimenticios");
+
+    private final String description;
+
+    ProductType(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;java-preentrega/src/com/techlab&apos; to &apos;java-preentrega&apos;" description="Rename resource &apos;techlab&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/com/techlab" name="java-preentrega" stamp="1791549835924" updateReferences="true"/>
+</session>

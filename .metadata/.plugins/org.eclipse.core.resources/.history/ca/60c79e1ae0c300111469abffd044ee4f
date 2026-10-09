@@ -1,0 +1,112 @@
+package com.java-preentrega.article.service;
+
+import com.techlab.article.model.Category;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.stream.IntStream;
+
+public class Catalog implements Iterable<Category> {
+    private final List<Category> categories;
+
+    public Catalog() {
+        this.categories = new ArrayList<>();
+    }
+
+    public Iterator<Category> iterator() {
+        return Collections.unmodifiableList(this.categories).iterator();
+    }
+
+    public boolean isEmpty() {
+        return this.categories.isEmpty();
+    }
+
+    public Category getCategoryByCode(String code) {
+        if (code == null || code.isBlank() || this.categories.isEmpty())
+            return null;
+        return this.categories.stream()
+                .filter(item -> item.getCode().equalsIgnoreCase(code.trim()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Category getCategoryByName(String name) {
+        if (name == null || name.isBlank() || this.categories.isEmpty())
+            return null;
+        return this.categories.stream()
+                .filter(item -> item.getName().equalsIgnoreCase(name.trim()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public boolean isCategoryCodeIntoCatalog(String code) {
+        return this.getCategoryByCode(code) != null;
+    }
+
+    public boolean isCategoryNameIntoCatalog(String name) {
+        return this.getCategoryByName(name) != null;
+    }
+
+    public List<Category> getCategories() {
+        return Collections.unmodifiableList(this.categories);
+    }
+
+    public int getIndexByName(String name) {
+        if (name == null || name.isBlank())
+            return -1;
+        return IntStream.range(0, this.categories.size())
+                .filter(item -> this.categories.get(item).getName().equalsIgnoreCase(name.trim()))
+                .findFirst()
+                .orElse(-1);
+    }
+
+    public int getIndexByCode(String code) {
+        if (code == null || code.isBlank())
+            return -1;
+        return IntStream.range(0, this.categories.size())
+                .filter(item -> this.categories.get(item).getCode().equalsIgnoreCase(code.trim()))
+                .findFirst()
+                .orElse(-1);
+    }
+
+    public void addCategoryToCatalog(Category category) {
+        if (category == null) {
+            throw new IllegalArgumentException("La categoría debe existir");
+        }
+        if (this.isCategoryCodeIntoCatalog(category.getCode())) {
+            throw new IllegalArgumentException("Ese código de categoría ya existe en el catálogo");
+        }
+        if (this.isCategoryNameIntoCatalog(category.getName())) {
+            throw new IllegalArgumentException("Ese nombre de categoría ya existe en el catálogo");
+        }
+        this.categories.add(category);
+    }
+
+    public boolean hasCategoryInInventory(String code, Inventory inventory) {
+        if (code == null || code.isBlank() || inventory == null || inventory.getProducts() == null) {
+            return false;
+        }
+        return inventory.getProducts().stream()
+                .filter(item -> item != null && item.getCategory() != null)
+                .anyMatch(item -> item.getCategory().getCode().equalsIgnoreCase(code.trim()));
+    }
+
+    public Category removeCategoryFromCatalog(String code, Inventory inventory) {
+        if (code != null && !code.isBlank() && !this.categories.isEmpty() && inventory != null) {
+            if (!hasCategoryInInventory(code, inventory)) {
+                Category category = this.categories.stream()
+                        .filter(item -> item != null && item.getCode() != null)
+                        .filter(item -> item.getCode().equalsIgnoreCase(code.trim()))
+                        .findFirst()
+                        .orElse(null);
+                if (category != null) {
+                    this.categories.remove(category);
+                    return category;
+                }
+            }
+        }
+        return null;
+    }
+}

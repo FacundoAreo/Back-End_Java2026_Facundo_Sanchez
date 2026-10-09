@@ -1,0 +1,5 @@
+package com.java-preentrega.article.interfaces;
+
+public interface Calculable {
+    double calculateFinalPrice ();
+}
